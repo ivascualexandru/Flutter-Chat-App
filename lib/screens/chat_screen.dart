@@ -1,10 +1,31 @@
 import 'package:chat_app/widgets/chat/new_message.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/chat/messages.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
+
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final fbm = FirebaseMessaging.instance;
+    fbm.requestPermission();
+    FirebaseMessaging.onMessage.listen((msg) {
+      print(msg);
+      return;
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((msg) {
+      print(msg);
+      return;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +34,7 @@ class ChatScreen extends StatelessWidget {
         title: Text('FlutterChat'),
         actions: [
           DropdownButton(
+            underline: Container(),
             items: [
               DropdownMenuItem(
                 child: Container(
